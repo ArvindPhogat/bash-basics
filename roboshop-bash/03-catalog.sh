@@ -74,18 +74,36 @@ npm install &>> $LOG
 stat $?
 
 echo "Installing mongodb schema :"
+dnf install mongodb-mongosh -y &>> $LOG
 
 dnf install mongodb-mongosh -y &>> $LOG
-if [ $? -ne 0 ]; then
-  echo -e "\e[31mERROR: Failed to install mongodb-mongosh. Check your repo configuration and network.\e[0m"
-  exit 4
+if [ $? -ne 0 ] || ! command -v mongodb-mongosh &>/dev/null; then
+  echo -e "\e[33mFalling back to mongosh tarball install...\e[0m"
+  cd /tmp
+  curl -s -O https://downloads.mongodb.com/compass/mongosh-2.0.1-linux-x64.tgz
+  tar -xzf mongosh-2.0.1-linux-x64.tgz
+  sudo mv mongosh-2.0.1-linux-x64/bin/mongosh /usr/local/bin/
+  sudo chmod +x /usr/local/bin/mongosh
+  if ! command -v mongosh &>/dev/null; then
+    echo -e "\e[31mERROR: Failed to install mongosh by all methods.\e[0m"
+    exit 4
+  fi
+  echo -e "\e[32mmongosh installed via tarball.\e[0m"
 else
   stat $?
 fi
 
 echo "Injecting the schema :"
-mongodb-mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
-stat $?
+if command -v mongosh &>/dev/null; then
+  mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+  stat $?
+elif command -v mongodb-mongosh &>/dev/null; then
+  mongodb-mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+  stat $?
+else
+  echo -e "\e[31mERROR: No mongosh client found for schema injection.\e[0m"
+  exit 5
+fi
 
 echo "Reloading systemd and starting $COMPONENT service :"
 systemctl daemon-reload
