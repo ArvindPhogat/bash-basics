@@ -48,7 +48,7 @@ stat $?
 
 echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
-rm -rf * &>> $logfile
+rm -rf /usr/share/nginx/html/* &>> $logfile
 
 stat $?
 
