@@ -56,6 +56,11 @@ echo "extracting the $component code"
 unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>> $logfile
 stat $?
 
+
+echo -n "configuring the $component nginx configuration file"
+cp nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
+stat $? 
+
 echo "starting $component nginx service"
 systemctl enable nginx &>> $logfile
 systemctl start nginx &>> $logfile
