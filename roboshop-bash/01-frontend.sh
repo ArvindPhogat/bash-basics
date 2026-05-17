@@ -47,6 +47,7 @@ curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$compone
 stat $?
 
 echo "performing cleanup: removing old content from nginx html directory"
+
 cd /usr/share/nginx/html
 rm -rf /usr/share/nginx/html/* &>> $logfile
 
@@ -54,25 +55,16 @@ conf_path="$(cd "$(dirname "$0")" && pwd)/nginx.conf"
 echo "Looking for nginx.conf at: $conf_path"
 if [ -f "$conf_path" ]; then
   cp "$conf_path" /etc/nginx/default.d/roboshop.conf &>> $logfile
-   if [ $? -eq 0 ]; then
-     echo "nginx.conf copied successfully"
-   else
-     echo "failure"
-     exit 2
-   fi
+  if [ $? -eq 0 ]; then
+    echo "nginx.conf copied successfully"
+  else
+    echo "failure"
+    exit 2
+  fi
 else
   echo "nginx.conf not found in script directory. Skipping custom config."
   echo "failure"
-  systemctl restart nginx &>> $logfile
-  stat $?
-else
-  echo -e "\e[31mnginx.conf not found in script directory. Skipping custom config.\e[0m" | tee -a $logfile
-  # Optionally, you can exit here if config is required:
-  # exit 3
 fi
-fi
-cp nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
-stat $? 
 
 echo "starting $component nginx service"
 systemctl enable nginx &>> $logfile
