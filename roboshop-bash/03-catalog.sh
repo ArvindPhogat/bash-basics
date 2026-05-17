@@ -21,7 +21,7 @@ stat() {
   fi
 }
 
-MONGODB_REPO_SRC="/Users/seemaphogat/Desktop/learning-60/bash-basics/roboshop-bash/mongodb.repo"
+MONGODB_REPO_SRC="$(pwd)/mongodb.repo"
 MONGODB_REPO_DEST="/etc/yum.repos.d/mongodb.repo"
 echo -n "Copying MongoDB repo file: "
 if [ -f "$MONGODB_REPO_SRC" ]; then
