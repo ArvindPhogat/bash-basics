@@ -56,15 +56,9 @@ chown -R nginx:nginx /usr/share/nginx/html &>> $logfile
 chmod -R 755 /usr/share/nginx/html &>> $logfile
 stat $?
 
-# Handle nginx.conf
-conf_path="$(cd "$(dirname "$0")" && pwd)/nginx.conf"
-echo "Looking for nginx.conf at: $conf_path"
-if [ -f "$conf_path" ]; then
-  cp "$conf_path" /etc/nginx/default.d/roboshop.conf &>> $logfile
-  stat $?
-else
-  echo -e "\e[31mnginx.conf not found in script directory. Skipping custom config.\e[0m" | tee -a $logfile
-fi
+# Copy nginx.conf from a fixed path
+cp /home/ec2-user/bash-basics/roboshop-bash/nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
+stat $?
 
 echo "restarting nginx service"
 systemctl enable nginx &>> $logfile
