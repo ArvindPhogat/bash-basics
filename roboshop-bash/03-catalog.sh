@@ -45,7 +45,13 @@ curl -o /tmp/${COMPONENT}.zip https://stan-robotshop.s3.amazonaws.com/${COMPONEN
 stat $?
 
 echo "Configuring systemd for $COMPONENT :"
-cp ${COMPONENT}.service /etc/systemd/system/${COMPONENT}.service
+if [ -f ${COMPONENT}.service ]; then
+  cp ${COMPONENT}.service /etc/systemd/system/${COMPONENT}.service
+  stat $?
+else
+  echo -e "\e[31mERROR: ${COMPONENT}.service file not found in $(pwd)!\e[0m"
+  exit 3
+fi
 
 echo "Extracting the $COMPONENT app :"
 unzip -o /tmp/${COMPONENT}.zip -d /app/ &>> $LOG
@@ -58,7 +64,12 @@ stat $?
 
 echo "Installing mongodb schema :"
 dnf install mongodb-mongosh -y &>> $LOG
-stat $?
+if [ $? -ne 0 ]; then
+  echo -e "\e[31mERROR: Failed to install mongodb-mongosh. Check your repo configuration and network.\e[0m"
+  exit 4
+else
+  stat $?
+fi
 
 echo "Loading schema into MongoDB :"
 mongosh < /app/schema/catalogue.js &>> $LOG
