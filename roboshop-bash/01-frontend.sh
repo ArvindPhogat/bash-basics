@@ -23,3 +23,18 @@ dnf module enable nginx:1.24 -y
 echo "installing nginx"
 dnf install nginx -y
 
+echo "downloading the frontend code"
+curl -L -o /tmp/frontend.zip "https://stan-robotshop.s3.amazonaws.com/frontend.zip"
+
+echo "performing cleanup""
+cd /usr/share/nginx/html
+rm -rf *
+
+echo "extracting the frontend code"
+unzip -o /tmp/frontend.zip -d /usr/share/nginx/html &>/dev/null
+
+echo "starting frontend nginx service"
+systemctl enable nginx
+systemctl start nginx
+
+echo "frontend component of the Roboshop application has been set up successfully"
