@@ -1,0 +1,74 @@
+#!/bin/bash
+# 03-catalog.sh - Install and set up the Catalogue component of the Roboshop application
+
+ID=$(id -u)
+COMPONENT="catalogue"
+APPUSER="roboshop"
+LOG="/tmp/${COMPONENT}.log"
+
+if [ $ID -ne 0 ]; then
+  echo -e "\e[31mThis script must be run as root or sudo user. Please run the script with sudo or as root.\e[0m"
+  echo -e "\e[33mex: sudo bash $0 or # bash $0\e[0m"
+  exit 1
+fi
+
+stat() {
+  if [ $1 -eq 0 ]; then
+    echo -e "\e[32msuccess\e[0m"
+  else
+    echo -e "\e[31mfailure\e[0m"
+    exit 2
+  fi
+}
+
+echo "Installing Nodejs :"
+dnf install nodejs -y &>> $LOG
+stat $?
+
+echo "Creating roboshop user account :"
+useradd $APPUSER &>> $LOG
+stat $?
+
+echo "Performing cleanup of $COMPONENT :"
+rm -rf /app/ || true
+stat $?
+
+echo "Creating APP directory :"
+mkdir /app
+stat $?
+
+echo "Downloading the $COMPONENT app :"
+curl -o /tmp/${COMPONENT}.zip https://stan-robotshop.s3.amazonaws.com/${COMPONENT}-v3.zip
+stat $?
+
+echo "Configuring systemd for $COMPONENT :"
+cp ${COMPONENT}.service /etc/systemd/system/${COMPONENT}.service
+
+echo "Extracting the $COMPONENT app :"
+unzip -o /tmp/${COMPONENT}.zip -d /app/ &>> $LOG
+stat $?
+
+echo "Generating $COMPONENT Artifacts :"
+cd /app/
+npm install &>> $LOG
+stat $?
+
+echo "Installing mongodb schema :"
+dnf install mongodb-mongosh -y &>> $LOG
+stat $?
+
+echo "Loading schema into MongoDB :"
+mongosh < /app/schema/catalogue.js &>> $LOG
+stat $?
+
+echo "Injecting the schema :"
+mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+stat $?
+
+echo "Reloading systemd and starting $COMPONENT service :"
+systemctl daemon-reload
+systemctl enable ${COMPONENT}
+systemctl start ${COMPONENT}
+stat $?
+
+echo -e "\e[32m$COMPONENT setup completed successfully!\e[0m"
