@@ -25,7 +25,7 @@ echo "installing nginx"
 dnf install nginx -y
 
 echo "downloading the $component code"
-curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component.zip"
+curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component-v3.zip"
 
 echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
