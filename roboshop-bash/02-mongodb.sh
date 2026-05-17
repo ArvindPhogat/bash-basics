@@ -24,12 +24,20 @@ stat() {
 }
 
 echo -n "configuring the MongoDB repository:"
-cat <<EOF >/etc/yum.repos.d/mongodb.repo
-[mongodb-org-6.0]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/6.0/x86_64/
-gpgcheck=1
-enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
-EOF
-stat $?     
+
+cp /home/ec2-user/bash-basics/roboshop-bash/mongodb.repo /etc/yum.repos.d/mongodb.repo &>> $logfile
+stat $?
+
+
+# dnf install mongodb-org -y 
+echo -n "installing $component:"
+dnf install mongodb-org -y &>> $logfile
+stat $?
+
+
+# systemctl enable mongod
+
+echo -n "enabling $component service:"
+systemctl enable mongod  
+systemctl start mongod
+stat $?
