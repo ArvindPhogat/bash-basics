@@ -44,31 +44,31 @@ stat $?
 echo "downloading the $component code"
 curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component-v3.zip" &>> $logfile
 
+stat $?cp nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
+stat $? 
+
+echo "extracting the $component code"
+unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>> $logfile
 stat $?
 
-echo "performing cleanup: removing old content from nginx html directory"
+echo "setting ownership and permissions for nginx html directory"
+chown -R nginx:nginx /usr/share/nginx/html &>> $logfile
+chmod -R 755 /usr/share/nginx/html &>> $logfile
+stat $?
 
-cd /usr/share/nginx/html
-rm -rf /usr/share/nginx/html/* &>> $logfile
-
+# Handle nginx.conf
 conf_path="$(cd "$(dirname "$0")" && pwd)/nginx.conf"
 echo "Looking for nginx.conf at: $conf_path"
 if [ -f "$conf_path" ]; then
   cp "$conf_path" /etc/nginx/default.d/roboshop.conf &>> $logfile
-  if [ $? -eq 0 ]; then
-    echo "nginx.conf copied successfully"
-  else
-    echo "failure"
-    exit 2
-  fi
+  stat $?
 else
-  echo "nginx.conf not found in script directory. Skipping custom config."
-  echo "failure"
+  echo -e "\e[31mnginx.conf not found in script directory. Skipping custom config.\e[0m" | tee -a $logfile
 fi
 
-echo "starting $component nginx service"
+echo "restarting nginx service"
 systemctl enable nginx &>> $logfile
-systemctl start nginx &>> $logfile
+systemctl restart nginx &>> $logfile
 stat $?
 
 echo -e "\e[32m$component component of the Roboshop application has been set up successfully\e[0m"
