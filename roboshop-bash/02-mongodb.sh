@@ -1,15 +1,14 @@
 #!/bin/bash
-# 02-mongodb.sh - Install and set up the MongoDB component of the Roboshop application
-# This script will: MongoDB component of the Roboshop application
+# 02-mongodb.sh - Automated MongoDB 7.0 setup for Roboshop on RHEL 9
 
-echo "configuring the MongoDB component of the Roboshop application"
+set -e
 
 ID=$(id -u)
-component="mongodb"
-logfile="/tmp/${component}.log"
+COMPONENT="mongodb"
+LOG="/tmp/${COMPONENT}.log"
 
 if [ $ID -ne 0 ]; then
-  echo -e "\e[31mThis script must be run as root or sudo user. Please run the script with sudo or as root.\e[0m"
+  echo -e "\e[31mThis script must be run as root or sudo user.\e[0m"
   echo -e "\e[33mex: sudo bash $0 or # bash $0\e[0m"
   exit 1
 fi
@@ -23,27 +22,28 @@ stat() {
   fi
 }
 
-echo -n "configuring the MongoDB repository:"
+MONGODB_REPO_SRC="$(pwd)/mongodb.repo"
+MONGODB_REPO_DEST="/etc/yum.repos.d/mongodb.repo"
+echo -n "Copying MongoDB repo file: "
+if [ -f "$MONGODB_REPO_SRC" ]; then
+  cp "$MONGODB_REPO_SRC" "$MONGODB_REPO_DEST" &>> $LOG
+  stat $?
+else
+  echo -e "\e[31mERROR: Source MongoDB repo file not found at $MONGODB_REPO_SRC.\e[0m"
+  exit 1
+fi
 
-cp /home/ec2-user/bash-basics/roboshop-bash/mongodb.repo /etc/yum.repos.d/mongodb.repo &>> $logfile
+echo -n "Installing MongoDB: "
+dnf install -y mongodb-org &>> $LOG
 stat $?
 
-
-# dnf install mongodb-org -y 
-echo -n "installing $component:"
-dnf install mongodb-org -y &>> $logfile
+echo -n "Configuring mongod to listen on all interfaces: "
+sed -i 's/^  bindIp:.*$/  bindIp: 0.0.0.0/' /etc/mongod.conf &>> $LOG
 stat $?
 
-echo -n "updating $component visibility:"
-sudo sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>> $logfile
+echo -n "Enabling and starting mongod service: "
+systemctl enable mongod &>> $LOG
+systemctl start mongod &>> $LOG
 stat $?
 
-
-
-
-# systemctl enable mongod
-
-echo -n "enabling $component service:"
-systemctl enable mongod  
-systemctl start mongod
-stat $?
+echo -e "\e[32mMongoDB setup completed successfully!\e[0m"
