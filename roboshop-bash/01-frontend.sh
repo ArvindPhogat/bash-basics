@@ -27,8 +27,9 @@ stat() {
     exit 2
   fi
 }
+
 stat $?
-fi
+
 
 echo "Enabling installing 24 version nginx"
 dnf module enable nginx:1.24 -y &>> $logfile
