@@ -50,20 +50,19 @@ echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
 rm -rf /usr/share/nginx/html/* &>> $logfile
 
-stat $?
-
-echo "extracting the $component code"
-unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>> $logfile
-stat $?
-
-
-echo -n "configuring the $component nginx configuration file"
 conf_path="$(cd "$(dirname "$0")" && pwd)/nginx.conf"
 echo "Looking for nginx.conf at: $conf_path"
 if [ -f "$conf_path" ]; then
   cp "$conf_path" /etc/nginx/default.d/roboshop.conf &>> $logfile
-  stat $?
-  echo "Restarting nginx to apply new config" | tee -a $logfile
+  if [ $? -eq 0 ]; then
+    echo "nginx.conf copied successfully"
+  else
+    echo "failure"
+    exit 2
+  fi
+else
+  echo "nginx.conf not found in script directory. Skipping custom config."
+  echo "failure"
   systemctl restart nginx &>> $logfile
   stat $?
 else
