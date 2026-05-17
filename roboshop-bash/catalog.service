@@ -1,0 +1,21 @@
+# vim /etc/systemd/system/catalogue.service
+
+______________________________________________________________________
+[Unit]
+Description = Catalogue Service
+
+[Service]
+User=roboshop
+Environment=MONGO=true
+Environment=MONGO_URL="mongodb://mongodb.roboshopes-60.online:27017/catalogue"
+ExecStart=/bin/node /app/server.js
+SyslogIdentifier=catalogue
+
+[Install]
+WantedBy=multi-user.target
+______________________________________________________________________
+
+# systemctl daemon-reload
+# systemctl start catalogue
+# systemctl enable catalogue
+# systemctl status catalogue -l
