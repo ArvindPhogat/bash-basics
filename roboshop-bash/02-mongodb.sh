@@ -35,7 +35,7 @@ dnf install mongodb-org -y &>> $logfile
 stat $?
 
 echo -n "updating $component visibility:"
-sudo sed -ie 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>> $logfile
+sudo sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>> $logfile
 stat $?
 
 
