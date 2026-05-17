@@ -21,6 +21,17 @@ stat() {
   fi
 }
 
+MONGODB_REPO_SRC="/Users/seemaphogat/Desktop/learning-60/bash-basics/roboshop-bash/mongodb.repo"
+MONGODB_REPO_DEST="/etc/yum.repos.d/mongodb.repo"
+echo -n "Copying MongoDB repo file: "
+if [ -f "$MONGODB_REPO_SRC" ]; then
+  cp "$MONGODB_REPO_SRC" "$MONGODB_REPO_DEST" &>> $LOG
+  stat $?
+else
+  echo -e "\e[31mERROR: Source MongoDB repo file not found at $MONGODB_REPO_SRC.\e[0m"
+  exit 1
+fi
+
 echo "Installing Nodejs :"
 dnf install nodejs -y &>> $LOG
 stat $?
