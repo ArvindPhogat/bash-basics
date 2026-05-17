@@ -95,10 +95,10 @@ fi
 
 echo "Injecting the schema :"
 if command -v mongosh &>/dev/null; then
-  mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+  mongosh --host mongodb.roboshopes-60.online </app/db/master-data.js &>> $LOG
   stat $?
 elif command -v mongodb-mongosh &>/dev/null; then
-  mongodb-mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+  mongodb-mongosh --host mongodb.roboshopes-60.online </app/db/master-data.js &>> $LOG
   stat $?
 else
   echo -e "\e[31mERROR: No mongosh client found for schema injection.\e[0m"
