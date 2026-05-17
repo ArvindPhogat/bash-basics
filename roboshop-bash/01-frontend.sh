@@ -10,8 +10,8 @@ component="frontend"
 logfile="/tmp/${component}.log"
 
 if [ $ID -ne 0 ]; then
-  echo "This script must be run as root or sudo user. Please run the script with sudo or as root."
-  echo "ex: sudo bash $0 or # bash $0"
+  echo -e "\e[31mThis script must be run as root or sudo user. Please run the script with sudo or as root.\e[0m"
+  echo -e "\e[33mex: sudo bash $0 or # bash $0\e[0m"
   exit 1
 fi
 
@@ -20,26 +20,26 @@ echo "disabling the default nginx configuration"
 dnf module disable nginx -y &>> $logfile
 
 if [ $? -eq 0 ]; then
-  echo "success"
+  echo -e "\e[32msuccess\e[0m"
 else
-  echo "failure"
+  echo -e "\e[31mfailure\e[0m"
   exit 2
 fi
 
 echo "Enabling installing 24 version nginx"
 dnf module enable nginx:1.24 -y &>> $logfile
 if [ $? -eq 0 ]; then
-  echo "success"
+  echo -e "\e[32msuccess\e[0m"
 else
-  echo "failure"
+  echo -e "\e[31mfailure\e[0m"
   exit 2
 fi
 echo "installing nginx"
 dnf install nginx -y &>> $logfile
 if [ $? -eq 0 ]; then
-  echo "success"
+  echo -e "\e[32msuccess\e[0m"
 else
-  echo "failure"
+  echo -e "\e[31mfailure\e[0m"
   exit 2
 fi
 
@@ -53,9 +53,9 @@ rm -rf * &>> $logfile
 echo "extracting the $component code"
 unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>> $logfile
 if [ $? -eq 0 ]; then
-  echo "success"
+  echo -e "\e[32msuccess\e[0m"
 else
-  echo "failure"
+  echo -e "\e[31mfailure\e[0m"
   exit 2
 fi
 
@@ -63,10 +63,10 @@ echo "starting $component nginx service"
 systemctl enable nginx &>> $logfile
 systemctl start nginx &>> $logfile
 if [ $? -eq 0 ]; then
-  echo "success"
+  echo -e "\e[32msuccess\e[0m"
 else
-  echo "failure"
+  echo -e "\e[31mfailure\e[0m"
   exit 2
 fi
 
-echo "$component component of the Roboshop application has been set up successfully"
+echo -e "\e[32m$component component of the Roboshop application has been set up successfully\e[0m"
