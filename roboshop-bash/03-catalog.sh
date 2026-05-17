@@ -37,7 +37,7 @@ rm -rf /app/ || true
 stat $?
 
 echo "Creating APP directory :"
-mkdir /app
+[ -d /app ] || mkdir /app
 stat $?
 
 echo "Downloading the $COMPONENT app :"
@@ -63,17 +63,13 @@ npm install &>> $LOG
 stat $?
 
 echo "Installing mongodb schema :"
-dnf install mongodb-mongosh -y &>> $LOG
+dnf install mongosh -y &>> $LOG
 if [ $? -ne 0 ]; then
-  echo -e "\e[31mERROR: Failed to install mongodb-mongosh. Check your repo configuration and network.\e[0m"
+  echo -e "\e[31mERROR: Failed to install mongosh. Check your repo configuration and network.\e[0m"
   exit 4
 else
   stat $?
 fi
-
-echo "Loading schema into MongoDB :"
-mongosh < /app/schema/catalogue.js &>> $LOG
-stat $?
 
 echo "Injecting the schema :"
 mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG

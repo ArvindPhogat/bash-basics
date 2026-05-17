@@ -1,4 +1,4 @@
-# vim /etc/yum.repos.d/mongo.repo
+# vim /etc/yum.repos.d/mongodb.repo
 
 [mongodb-org-7.0]
 name=MongoDB Repository
