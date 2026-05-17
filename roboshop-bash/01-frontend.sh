@@ -6,6 +6,7 @@ echo "configuring the frontend component of the Roboshop application"
 
 #i want to run this script as root user
 ID=$(id -u)
+component="frontend"
 
 if [ $ID -ne 0 ]; then
   echo "This script must be run as root or sudo user. Please run the script with sudo or as root."
@@ -23,18 +24,18 @@ dnf module enable nginx:1.24 -y
 echo "installing nginx"
 dnf install nginx -y
 
-echo "downloading the frontend code"
-curl -L -o /tmp/frontend.zip "https://stan-robotshop.s3.amazonaws.com/frontend.zip"
+echo "downloading the $component code"
+curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component.zip"
 
-echo "performing cleanup""
+echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
 rm -rf *
 
-echo "extracting the frontend code"
-unzip -o /tmp/frontend.zip -d /usr/share/nginx/html &>/dev/null
+echo "extracting the $component code"
+unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>/dev/null
 
-echo "starting frontend nginx service"
+echo "starting $component nginx service"
 systemctl enable nginx
 systemctl start nginx
 
-echo "frontend component of the Roboshop application has been set up successfully"
+echo "$component component of the Roboshop application has been set up successfully"
