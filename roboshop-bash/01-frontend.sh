@@ -60,8 +60,8 @@ stat $?
 echo -n "configuring the $component nginx configuration file"
 conf_path="$(cd "$(dirname "$0")" && pwd)/nginx.conf"
 echo "Looking for nginx.conf at: $conf_path"
-if [ -f $conf_path ]; then
-  cp $conf_path /etc/nginx/default.d/roboshop.conf &>> $logfile
+if [ -f "$conf_path" ]; then
+  cp "$conf_path" /etc/nginx/default.d/roboshop.conf &>> $logfile
   stat $?
   echo "Restarting nginx to apply new config" | tee -a $logfile
   systemctl restart nginx &>> $logfile
