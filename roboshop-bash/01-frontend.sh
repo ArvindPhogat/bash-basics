@@ -58,6 +58,14 @@ stat $?
 
 
 echo -n "configuring the $component nginx configuration file"
+if [ -f /usr/share/nginx/html/nginx.conf ]; then
+  mv /usr/share/nginx/html/nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
+  stat $?
+else
+  echo -e "\e[31mnginx.conf not found in extracted code. Skipping custom config.\e[0m" | tee -a $logfile
+  # Optionally, you can exit here if config is required:
+  # exit 3
+fi
 cp nginx.conf /etc/nginx/default.d/roboshop.conf &>> $logfile
 stat $? 
 
