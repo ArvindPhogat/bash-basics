@@ -26,7 +26,10 @@ dnf install nodejs -y &>> $LOG
 stat $?
 
 echo "Creating roboshop user account :"
-useradd $APPUSER &>> $LOG
+id $APPUSER &>> $LOG
+if [ $? -ne 0 ]; then
+  useradd $APPUSER &>> $LOG
+fi
 stat $?
 
 echo "Performing cleanup of $COMPONENT :"
