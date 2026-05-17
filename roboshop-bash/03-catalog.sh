@@ -74,16 +74,17 @@ npm install &>> $LOG
 stat $?
 
 echo "Installing mongodb schema :"
-dnf install mongosh -y &>> $LOG
+
+dnf install mongodb-mongosh -y &>> $LOG
 if [ $? -ne 0 ]; then
-  echo -e "\e[31mERROR: Failed to install mongosh. Check your repo configuration and network.\e[0m"
+  echo -e "\e[31mERROR: Failed to install mongodb-mongosh. Check your repo configuration and network.\e[0m"
   exit 4
 else
   stat $?
 fi
 
 echo "Injecting the schema :"
-mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
+mongodb-mongosh --host mongodb.robotshop.fun </app/db/master-data.js &>> $LOG
 stat $?
 
 echo "Reloading systemd and starting $COMPONENT service :"
