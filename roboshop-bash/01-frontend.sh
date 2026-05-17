@@ -19,61 +19,45 @@ fi
 echo "disabling the default nginx configuration"
 dnf module disable nginx -y &>> $logfile
 
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
+stat() {
+  if [ $1 -eq 0 ]; then
+    echo -e "\e[32msuccess\e[0m"
+  else
+    echo -e "\e[31mfailure\e[0m"
+    exit 2
+  fi
+}
+stat $?
 fi
 
 echo "Enabling installing 24 version nginx"
 dnf module enable nginx:1.24 -y &>> $logfile
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
-fi
+stat $?
+
+
 echo "installing nginx"
 dnf install nginx -y &>> $logfile
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
-fi
+stat $?
+
 
 echo "downloading the $component code"
-curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component-v3.zip"
+curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component-v3.zip" &>> $logfile
 
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
-fi
+stat $?
 
 echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
 rm -rf * &>> $logfile
 
+stat $?
+
 echo "extracting the $component code"
 unzip -o /tmp/$component.zip -d /usr/share/nginx/html &>> $logfile
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
-fi
+stat $?
 
 echo "starting $component nginx service"
 systemctl enable nginx &>> $logfile
 systemctl start nginx &>> $logfile
-if [ $? -eq 0 ]; then
-  echo -e "\e[32msuccess\e[0m"
-else
-  echo -e "\e[31mfailure\e[0m"
-  exit 2
-fi
+stat $?
 
 echo -e "\e[32m$component component of the Roboshop application has been set up successfully\e[0m"
