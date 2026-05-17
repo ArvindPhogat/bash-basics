@@ -46,6 +46,13 @@ fi
 echo "downloading the $component code"
 curl -L -o /tmp/$component.zip "https://stan-robotshop.s3.amazonaws.com/$component-v3.zip"
 
+if [ $? -eq 0 ]; then
+  echo -e "\e[32msuccess\e[0m"
+else
+  echo -e "\e[31mfailure\e[0m"
+  exit 2
+fi
+
 echo "performing cleanup: removing old content from nginx html directory"
 cd /usr/share/nginx/html
 rm -rf * &>> $logfile
