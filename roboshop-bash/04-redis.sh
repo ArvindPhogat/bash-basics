@@ -42,13 +42,14 @@ echo -n "configuring redis for ${COMPONENT} to listen on all interfaces in progr
 sed -ie 's/127.0.0.1/0.0.0.0/' /etc/redis/redis.conf &>> $LOG
 stat $?
 
-#echo -n "configuring redis for ${COMPONENT} to listen on all interfaces in progress..."
-#sed -ie 's/127.0.0.1/0.0.0.0/' /etc/redis/redis.conf &>> $LOG
-#stat $?
+echo -n "configuring redis for ${COMPONENT} to listen on all interfaces in progress..."
+sed -ie 's/protected-mode yes/protected-mode no/' /etc/redis/redis.conf &>> $LOG    
+stat $?
 
 echo -n "starting $component service in progress..."
 systemctl enable $COMPONENT &>> $LOG
 systemctl start $COMPONENT &>> $LOG
 stat $?
+
 
 echo -e "\e[32m ${COMPONENT} setup completed successfully! \e[0m"
