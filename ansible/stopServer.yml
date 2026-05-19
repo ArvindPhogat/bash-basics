@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
     - name: Stop EC2 instances by ID
-      amazon.aws.ec2:
+      amazon.aws.ec2_instance:
         instance_ids:
           - i-0c32d68ad4a0dc0ff
           - i-092a661b9ea7a8292
