@@ -1,0 +1,17 @@
+- name: Stop EC2 instances
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Stop EC2 instances by ID
+      amazon.aws.ec2:
+        instance_ids:
+          - i-0c32d68ad4a0dc0ff
+          - i-092a661b9ea7a8292
+          - i-0877296dc38e490f9
+          - i-02610374472e34ffe
+          - i-05b798aded5eabf8e
+          - i-0243ec0c3f4ac5c1d
+          - i-0468f046dc172f500
+        state: stopped
+        region: us-east-1
