@@ -50,6 +50,6 @@ echo -n "starting $component service in progress..."
 systemctl enable $COMPONENT &>> $LOG
 systemctl start $COMPONENT &>> $LOG
 stat $?
-
+-script
 
 echo -e "\e[32m ${COMPONENT} setup completed successfully! \e[0m"
