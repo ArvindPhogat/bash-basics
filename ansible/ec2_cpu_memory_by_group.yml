@@ -1,0 +1,11 @@
+- name: Get CPU and Memory info from dev and prod EC2 instances
+  hosts: dev:prod
+  gather_facts: yes
+  tasks:
+    - name: Show CPU info
+      ansible.builtin.debug:
+        msg: "CPU(s): {{ ansible_facts.processor_cores | default(ansible_facts.processor_count) }} | Model: {{ ansible_facts.processor[1] | default(ansible_facts.processor[0]) }}"
+
+    - name: Show Memory info
+      ansible.builtin.debug:
+        msg: "Total Memory (MB): {{ ansible_facts.memtotal_mb }}"

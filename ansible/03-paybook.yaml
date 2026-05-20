@@ -1,0 +1,9 @@
+- name: name of play
+  hosts: all
+  tasks:
+    - name: name of task from play1
+      ansible.builtin.debug:
+        msg: "This is task 1 from play 1"
+    - name: name of task from play2
+      ansible.builtin.debug:
+        msg: "This is task 2 from play 1"

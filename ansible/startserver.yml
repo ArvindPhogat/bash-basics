@@ -1,12 +1,12 @@
-- name: Stop EC2 instances
+- name: Start EC2 instances with tag name=dev
   hosts: localhost
   connection: local
   gather_facts: no
   tasks:
-    - name: Stop EC2 instances with tag name=dev
+    - name: Start EC2 instances with tag name=dev
       amazon.aws.ec2_instance:
         filters:
           "tag:name": "dev"
-          instance-state-name: running
-        state: stopped
+          instance-state-name: stopped
+        state: running
         region: us-east-1
