@@ -7,7 +7,20 @@
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; margin: 0; }
     .container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0001; padding: 32px 24px; }
-    h1 { color: #d7263d; text-align: center; }
+    h1 { color: #d7263d; text-align: center; font-family: 'Pacifico', cursive; font-size: 2.3em; letter-spacing: 2px; margin-bottom: 0.2em; }
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0002;
+      object-fit: cover;
+      background: #fff;
+    }
     label { display: block; margin: 18px 0 6px; font-weight: 500; }
     input, select, textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; }
     .note { color: #d7263d; font-size: 0.95em; margin: 8px 0 0; }
@@ -39,7 +52,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Order Your Cake</h1>
+    <div class="logo">
+      <img src="https://img.freepik.com/free-vector/bakery-logo-template_23-2148986822.jpg?w=200" alt="RASA Bakery Logo">
+    </div>
+    <h1>RASA Bakery</h1>
     <form onsubmit="event.preventDefault(); sendWhatsApp();">
       <label for="customer-name">Your Name</label>
       <input type="text" id="customer-name" required>
@@ -75,6 +91,7 @@
       <div class="small">Choose a design from Pinterest or Instagram, or describe your idea above.</div>
 
       <button class="whatsapp-btn" type="submit">Send Order on WhatsApp</button>
+      <div style="text-align:center; margin-top:18px; color:#888; font-size:0.95em;">&copy; 2026 RASA Bakery</div>
     </form>
   </div>
 </body>
