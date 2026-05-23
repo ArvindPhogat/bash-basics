@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RASA Essences Cake Order</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; margin: 0; }
+    .container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0001; padding: 32px 24px; }
+    h1 { color: #d7263d; text-align: center; }
+    label { display: block; margin: 18px 0 6px; font-weight: 500; }
+    input, select, textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; }
+    .note { color: #d7263d; font-size: 0.95em; margin: 8px 0 0; }
+    .whatsapp-btn { background: #25d366; color: #fff; border: none; border-radius: 6px; padding: 14px 0; width: 100%; font-size: 1.1em; margin-top: 24px; cursor: pointer; }
+    .whatsapp-btn:hover { background: #1ebe57; }
+    .small { font-size: 0.9em; color: #555; }
+  </style>
+  <script>
+    function updateNotice() {
+      const size = document.getElementById('cake-size').value;
+      const notice = document.getElementById('notice');
+      if (size === 'big') {
+        notice.textContent = "For big cakes, please book at least 2 weeks in advance!";
+      } else {
+        notice.textContent = "";
+      }
+    }
+    function sendWhatsApp() {
+      const name = document.getElementById('customer-name').value;
+      const contact = document.getElementById('customer-contact').value;
+      const flavor = document.getElementById('cake-flavor').value;
+      const size = document.getElementById('cake-size').value;
+      const date = document.getElementById('order-date').value;
+      const design = document.getElementById('design-link').value;
+      let msg = `Cake Order for RASA Essences:%0AName: ${name}%0AContact: ${contact}%0AFlavor: ${flavor}%0ASize: ${size === 'big' ? 'Big (2 weeks notice)' : 'Instant/Small'}%0AOrder Date: ${date}%0ADesign Inspiration: ${design}`;
+      window.open(`https://wa.me/91YOURNUMBER?text=${msg}`, '_blank');
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Order Your Cake</h1>
+    <form onsubmit="event.preventDefault(); sendWhatsApp();">
+      <label for="customer-name">Your Name</label>
+      <input type="text" id="customer-name" required>
+
+      <label for="customer-contact">Contact Number</label>
+      <input type="tel" id="customer-contact" required>
+
+      <label for="cake-flavor">Cake Flavor</label>
+      <select id="cake-flavor" required>
+        <option value="">Select a flavor</option>
+        <option>Chocolate</option>
+        <option>Vanilla</option>
+        <option>Red Velvet</option>
+        <option>Butterscotch</option>
+        <option>Black Forest</option>
+        <option>Custom</option>
+      </select>
+
+      <label for="cake-size">Cake Size</label>
+      <select id="cake-size" onchange="updateNotice()" required>
+        <option value="">Select size</option>
+        <option value="small">Small/Instant</option>
+        <option value="big">Big (2 weeks notice)</option>
+      </select>
+      <div class="note" id="notice"></div>
+
+      <label for="order-date">Order Date</label>
+      <input type="date" id="order-date" required>
+
+      <label for="design-link">Design Inspiration (Pinterest/Instagram link)</label>
+      <input type="url" id="design-link" placeholder="Paste link here">
+
+      <div class="small">Choose a design from Pinterest or Instagram, or describe your idea above.</div>
+
+      <button class="whatsapp-btn" type="submit">Send Order on WhatsApp</button>
+    </form>
+  </div>
+</body>
+</html>
