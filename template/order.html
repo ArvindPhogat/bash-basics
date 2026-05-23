@@ -46,7 +46,7 @@
       const date = document.getElementById('order-date').value;
       const design = document.getElementById('design-link').value;
       let msg = `Cake Order for RASA Essences:%0AName: ${name}%0AContact: ${contact}%0AFlavor: ${flavor}%0ASize: ${size === 'big' ? 'Big (2 weeks notice)' : 'Instant/Small'}%0AOrder Date: ${date}%0ADesign Inspiration: ${design}`;
-      window.open(`https://wa.me/91YOURNUMBER?text=${msg}`, '_blank');
+      window.open(`https://api.whatsapp.com/send?phone=91YOURNUMBER&text=${msg}`, '_blank');
     }
   </script>
 </head>
